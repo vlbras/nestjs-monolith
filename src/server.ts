@@ -64,7 +64,7 @@ const options = {
 
 const swaggerSpec = swaggerJsDoc(options);
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  *               items:
  *                 type: object
  */
-app.get('/offers', async (req, res) => {
+app.get('/api/sdk/v0.1/offers', async (req, res) => {
   try {
     const offers = await getOffers(lavarageProgram);
     res.json(offers);
@@ -105,7 +105,7 @@ app.get('/offers', async (req, res) => {
  *               items:
  *                 type: object
  */
-app.get('/positions/open', async (req, res) => {
+app.get('/api/sdk/v0.1/positions/open', async (req, res) => {
   try {
     const positions = await getOpenPositions(lavarageProgram);
     res.json(positions);
@@ -129,7 +129,7 @@ app.get('/positions/open', async (req, res) => {
  *               items:
  *                 type: object
  */
-app.get('/positions/closed', async (req, res) => {
+app.get('/api/sdk/v0.1/positions/closed', async (req, res) => {
   try {
     const positions = await getClosedPositions(lavarageProgram);
     res.json(positions);
@@ -153,7 +153,7 @@ app.get('/positions/closed', async (req, res) => {
  *               items:
  *                 type: object
  */
-app.get('/positions/liquidated', async (req, res) => {
+app.get('/api/sdk/v0.1/positions/liquidated', async (req, res) => {
   try {
     const positions = await getLiquidatedPositions(lavarageProgram);
     res.json(positions);
@@ -177,7 +177,7 @@ app.get('/positions/liquidated', async (req, res) => {
  *               items:
  *                 type: object
  */
-app.get('/positions', async (req, res) => {
+app.get('/api/sdk/v0.1/positions', async (req, res) => {
   try {
     const positions = await getAllPositions(lavarageProgram);
     res.json(positions);
@@ -216,7 +216,7 @@ app.get('/positions', async (req, res) => {
  *             schema:
  *               type: object
  */
-app.post('/trades/open', async (req, res) => {
+app.post('/api/sdk/v0.1/trades/open', async (req, res) => {
   const { offerId, jupInstruction, marginSOL, leverage, partnerFeeRecipient } = req.body;
   try {
     const offer = (await getOffers(lavarageProgram)).find(o => offerId === o.publicKey.toBase58())
@@ -272,7 +272,7 @@ app.post('/trades/open', async (req, res) => {
  *             schema:
  *               type: object
  */
-app.post('/trades/close', async (req, res) => {
+app.post('/api/sdk/v0.1/trades/close', async (req, res) => {
   const { positionId, offerId, jupInstruction, partnerFeeRecipient, profitFeeMarkup } = req.body;
   try {
     const position = (await getAllPositions(lavarageProgram)).find(p => positionId === p.publicKey.toBase58())
