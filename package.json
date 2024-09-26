@@ -1,4 +1,20 @@
 {
+  "name": "lavarage-public-api",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "test": "jest",
+    "docker:build": "docker build -t lava-api .",
+    "docker:run": "docker run -p 3000:3000 lava-api",
+    "docker:push": "docker push lava-api",
+    "docker:compose": "docker-compose up -d",
+    "prestart": "npm run build"
+  },
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",
     "@solana/spl-token": "^0.4.8",
