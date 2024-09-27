@@ -68,7 +68,7 @@ app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /**
  * @swagger
- * /offers:
+ * /api/sdk/v0.1/offers:
  *   get:
  *     summary: Get all offers
  *     responses:
@@ -92,7 +92,7 @@ app.get('/api/sdk/v0.1/offers', async (req, res) => {
 
 /**
  * @swagger
- * /positions/open:
+ * /api/sdk/v0.1/positions/open:
  *   get:
  *     summary: Get open positions
  *     responses:
@@ -116,7 +116,7 @@ app.get('/api/sdk/v0.1/positions/open', async (req, res) => {
 
 /**
  * @swagger
- * /positions/closed:
+ * /api/sdk/v0.1/positions/closed:
  *   get:
  *     summary: Get closed positions
  *     responses:
@@ -140,7 +140,7 @@ app.get('/api/sdk/v0.1/positions/closed', async (req, res) => {
 
 /**
  * @swagger
- * /positions/liquidated:
+ * /api/sdk/v0.1/positions/liquidated:
  *   get:
  *     summary: Get liquidated positions
  *     responses:
@@ -164,7 +164,7 @@ app.get('/api/sdk/v0.1/positions/liquidated', async (req, res) => {
 
 /**
  * @swagger
- * /positions:
+ * /api/sdk/v0.1/positions:
  *   get:
  *     summary: Get all positions
  *     responses:
@@ -188,7 +188,7 @@ app.get('/api/sdk/v0.1/positions', async (req, res) => {
 
 /**
  * @swagger
- * /trades/open:
+ * /api/sdk/v0.1/trades/open:
  *   post:
  *     summary: Open a trade
  *     requestBody:
@@ -244,7 +244,7 @@ app.post('/api/sdk/v0.1/trades/open', async (req, res) => {
 
 /**
  * @swagger
- * /trades/close:
+ * /api/sdk/v0.1/trades/close:
  *   post:
  *     summary: Close a trade
  *     requestBody:
