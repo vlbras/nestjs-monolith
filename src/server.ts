@@ -21,6 +21,7 @@ import {
   closeTrade,
   IDL
 } from 'lavarage-sdk';
+import path from 'path';
 
 const app = express();
 
@@ -59,7 +60,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['./src/server.ts', './dist/server.js'],
+  apis: [path.join(__dirname, './src/server.ts'), path.join(__dirname, './dist/server.js')],
 };
 
 const swaggerSpec = swaggerJsDoc(options);
