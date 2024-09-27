@@ -52,7 +52,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:3000',
+      url: 'https://partner-api.lavarave.wtf',
     },
   ],
 };
