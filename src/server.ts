@@ -60,7 +60,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: [path.join(__dirname, './src/server.ts'), path.join(__dirname, './dist/server.js')],
+  apis: [path.join(__dirname, './src/server.ts'), path.join(__dirname, './server.js')],
 };
 
 const swaggerSpec = swaggerJsDoc(options);

@@ -19,6 +19,7 @@ const web3_js_1 = require("@solana/web3.js");
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const lavarage_sdk_1 = require("lavarage-sdk");
+const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 function initProgram() {
@@ -48,7 +49,7 @@ const swaggerDefinition = {
 };
 const options = {
     swaggerDefinition,
-    apis: ['./src/server.ts'],
+    apis: [path_1.default.join(__dirname, './src/server.ts'), path_1.default.join(__dirname, './server.js')],
 };
 const swaggerSpec = (0, swagger_jsdoc_1.default)(options);
 app.use('/api/sdk/v0.1/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerSpec));
