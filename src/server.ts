@@ -22,7 +22,7 @@ import {
   IDL
 } from 'lavarage-sdk';
 import path from 'path';
-import * as swaggerDocument from './swagger.json'; 
+import swaggerDocument from '../swagger_output.json';
 
 const app = express();
 
@@ -44,20 +44,6 @@ function initProgram(): Program<typeof IDL> {
 }
 
 const lavarageProgram = initProgram()
-
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Lavarage API',
-    version: '1.0.0',
-    description: 'API documentation for Lavarage SDK methods',
-  },
-  servers: [
-    {
-      url: 'https://partner-api.lavarave.wtf',
-    },
-  ],
-};
 
 app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

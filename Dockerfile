@@ -8,11 +8,9 @@ RUN npm install
 
 COPY . .
 
-RUN npm install -g swagger-jsdoc
+RUN npm run build
 
-RUN npx tsc
-
-RUN swagger-jsdoc -d swaggerDef.js -o dist/swagger.json
+RUN npm run generate-docs
 
 FROM node:18-alpine
 
@@ -23,6 +21,7 @@ COPY package*.json ./
 RUN npm install --only=production
 
 COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/swagger_output.json ./swagger_output.json
 
 EXPOSE 3000
 
