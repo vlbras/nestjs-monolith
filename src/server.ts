@@ -22,6 +22,7 @@ import {
   IDL
 } from 'lavarage-sdk';
 import path from 'path';
+import * as swaggerDocument from './swagger.json'; 
 
 const app = express();
 
@@ -58,14 +59,7 @@ const swaggerDefinition = {
   ],
 };
 
-const options = {
-  swaggerDefinition,
-  apis: [path.join(__dirname, '**/*.{js,ts}')]
-};
-
-const swaggerSpec = swaggerJsDoc(options);
-
-app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /**
  * @swagger

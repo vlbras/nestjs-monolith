@@ -8,7 +8,11 @@ RUN npm install
 
 COPY . .
 
+RUN npm install -g swagger-jsdoc
+
 RUN npx tsc
+
+RUN swagger-jsdoc -d swaggerDef.js -o dist/swagger.json
 
 FROM node:18-alpine
 
