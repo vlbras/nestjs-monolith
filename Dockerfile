@@ -8,9 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
-
-RUN npm run generate-docs
+RUN npx tsc
 
 FROM node:18-alpine
 
@@ -21,7 +19,6 @@ COPY package*.json ./
 RUN npm install --only=production
 
 COPY --from=build /usr/src/app/dist ./dist
-COPY --from=build /usr/src/app/swagger_output.json ./swagger_output.json
 
 EXPOSE 3000
 

@@ -13,8 +13,7 @@
     "docker:run": "docker run -p 3000:3000 lava-api",
     "docker:push": "docker push lava-api",
     "docker:compose": "docker-compose up -d",
-    "prestart": "npm run build",
-    "generate-docs": "node swagger.js"
+    "prestart": "npm run build"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",

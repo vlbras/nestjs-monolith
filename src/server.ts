@@ -1,16 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import path from 'path';
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor';
-
 import {
   Keypair,
   PublicKey,
   Connection
 } from '@solana/web3.js';
-
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-
 import {
   getOffers,
   getOpenPositions,
@@ -21,8 +19,6 @@ import {
   closeTrade,
   IDL
 } from 'lavarage-sdk';
-import path from 'path';
-import swaggerDocument from '../swagger_output.json';
 
 const app = express();
 
@@ -45,7 +41,28 @@ function initProgram(): Program<typeof IDL> {
 
 const lavarageProgram = initProgram()
 
-app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Lavarage API',
+    version: '1.0.0',
+    description: 'API documentation for Lavarage SDK methods',
+  },
+  servers: [
+    {
+      url: 'https://partner-api.lavarave.wtf',
+    },
+  ],
+};
+
+const options = {
+  swaggerDefinition,
+  apis: [path.join(__dirname, '**/*.{js,ts}')]
+};
+
+const swaggerSpec = swaggerJsDoc(options);
+
+app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /**
  * @swagger
