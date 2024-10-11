@@ -64,10 +64,16 @@ const swaggerSpec = swaggerJsDoc(options);
 
 app.use(
   '/api/sdk/v0.1/docs',
-  express.static(path.join(__dirname, 'node_modules', 'swagger-ui-dist'))
+  express.static(path.join(__dirname, 'swagger-ui'))
 );
 
-app.use('/api/sdk/v0.1/docs', [...swaggerUi.serve], swaggerUi.setup(swaggerSpec));
+app.get('/api/sdk/v0.1/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'swagger-ui', 'index.html'));
+});
+
+app.get('/api/sdk/v0.1/docs/swagger.json', (req, res) => {
+  res.json(swaggerSpec);
+});
 
 /**
  * @swagger
