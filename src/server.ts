@@ -62,7 +62,12 @@ const options = {
 
 const swaggerSpec = swaggerJsDoc(options);
 
-app.use('/api/sdk/v0.1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  '/api/sdk/v0.1/docs',
+  express.static(path.join(__dirname, 'node_modules', 'swagger-ui-dist'))
+);
+
+app.use('/api/sdk/v0.1/docs', [...swaggerUi.serve], swaggerUi.setup(swaggerSpec));
 
 /**
  * @swagger
