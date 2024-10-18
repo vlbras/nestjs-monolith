@@ -1,14 +1,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import path from 'path';
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor';
 import {
   Keypair,
   PublicKey,
   Connection
 } from '@solana/web3.js';
-import swaggerJsDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
+import { OpenAPIV3 } from 'openapi-types';
 import {
   getOffers,
   getOpenPositions,
@@ -41,7 +39,7 @@ function initProgram(): Program<typeof IDL> {
 
 const lavarageProgram = initProgram()
 
-const swaggerDefinition = {
+const openApiDefinition: OpenAPIV3.Document = {
   openapi: '3.0.0',
   info: {
     title: 'Lavarage API',
@@ -53,37 +51,217 @@ const swaggerDefinition = {
       url: 'https://partner-api.lavarave.wtf',
     },
   ],
+  paths: {
+    '/api/sdk/v0.1/offers': {
+      get: {
+        summary: 'Get all offers',
+        responses: {
+          '200': {
+            description: 'A list of offers',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/sdk/v0.1/positions/open': {
+      get: {
+        summary: 'Get open positions',
+        responses: {
+          '200': {
+            description: 'A list of open positions',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/sdk/v0.1/positions/closed': {
+      get: {
+        summary: 'Get closed positions',
+        responses: {
+          '200': {
+            description: 'A list of closed positions',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/sdk/v0.1/positions/liquidated': {
+      get: {
+        summary: 'Get liquidated positions',
+        responses: {
+          '200': {
+            description: 'A list of liquidated positions',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/sdk/v0.1/positions': {
+      get: {
+        summary: 'Get all positions',
+        responses: {
+          '200': {
+            description: 'A list of all positions',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/sdk/v0.1/trades/open': {
+      post: {
+        summary: 'Open a trade',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  offerId: { type: 'string' },
+                  jupInstruction: { type: 'object' },
+                  marginSOL: { type: 'string' },
+                  leverage: { type: 'number' },
+                  partnerFeeRecipient: { type: 'string' }
+                },
+                required: ['offerId', 'jupInstruction', 'marginSOL', 'leverage']
+              }
+            }
+          }
+        },
+        responses: {
+          '200': {
+            description: 'The opened trade transaction',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    transaction: { type: 'string' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/api/sdk/v0.1/trades/close': {
+      post: {
+        summary: 'Close a trade',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  positionId: { type: 'string' },
+                  offerId: { type: 'string' },
+                  jupInstruction: { type: 'object' },
+                  partnerFeeRecipient: { type: 'string' },
+                  profitFeeMarkup: { type: 'number' }
+                },
+                required: ['positionId', 'offerId', 'jupInstruction']
+              }
+            }
+          }
+        },
+        responses: {
+          '200': {
+            description: 'The closed trade transaction',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    transaction: { type: 'string' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+  },
 };
 
-const options = {
-  swaggerDefinition,
-  apis: [path.join(__dirname, '**/*.{js,ts}')]
-};
+// Serve the OpenAPI specification at /api/sdk/v0.1/openapi.json
+app.get('/api/sdk/v0.1/openapi.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(openApiDefinition);
+});
 
-const swaggerSpec = swaggerJsDoc(options);
+// Serve the OpenAPI documentation using Redoc
+app.get('/api/sdk/v0.1/docs', (req, res) => {
+  res.send(`
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lavarage API Documentation</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <redoc spec-url='/api/sdk/v0.1/openapi.json'></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@latest/bundles/redoc.standalone.js"></script>
+  </body>
+</html>
+  `);
+});
 
-app.use(
-  '/api/sdk/v0.1/docs',
-  express.static(path.join(__dirname, 'node_modules', 'swagger-ui-dist'))
-);
-
-app.use('/api/sdk/v0.1/docs', [...swaggerUi.serve], swaggerUi.setup(swaggerSpec));
-
-/**
- * @swagger
- * /api/sdk/v0.1/offers:
- *   get:
- *     summary: Get all offers
- *     responses:
- *       200:
- *         description: A list of offers
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- */
+// API Endpoints
 app.get('/api/sdk/v0.1/offers', async (req, res) => {
   try {
     const offers = await getOffers(lavarageProgram);
@@ -93,21 +271,6 @@ app.get('/api/sdk/v0.1/offers', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/sdk/v0.1/positions/open:
- *   get:
- *     summary: Get open positions
- *     responses:
- *       200:
- *         description: A list of open positions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- */
 app.get('/api/sdk/v0.1/positions/open', async (req, res) => {
   try {
     const positions = await getOpenPositions(lavarageProgram);
@@ -117,21 +280,6 @@ app.get('/api/sdk/v0.1/positions/open', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/sdk/v0.1/positions/closed:
- *   get:
- *     summary: Get closed positions
- *     responses:
- *       200:
- *         description: A list of closed positions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- */
 app.get('/api/sdk/v0.1/positions/closed', async (req, res) => {
   try {
     const positions = await getClosedPositions(lavarageProgram);
@@ -141,21 +289,6 @@ app.get('/api/sdk/v0.1/positions/closed', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/sdk/v0.1/positions/liquidated:
- *   get:
- *     summary: Get liquidated positions
- *     responses:
- *       200:
- *         description: A list of liquidated positions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- */
 app.get('/api/sdk/v0.1/positions/liquidated', async (req, res) => {
   try {
     const positions = await getLiquidatedPositions(lavarageProgram);
@@ -165,21 +298,6 @@ app.get('/api/sdk/v0.1/positions/liquidated', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/sdk/v0.1/positions:
- *   get:
- *     summary: Get all positions
- *     responses:
- *       200:
- *         description: A list of all positions
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- */
 app.get('/api/sdk/v0.1/positions', async (req, res) => {
   try {
     const positions = await getAllPositions(lavarageProgram);
@@ -189,43 +307,14 @@ app.get('/api/sdk/v0.1/positions', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/sdk/v0.1/trades/open:
- *   post:
- *     summary: Open a trade
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               offerId:
- *                 type: string
- *               jupInstruction:
- *                 type: object
- *               marginSOL:
- *                 type: string
- *               leverage:
- *                 type: number
- *               partnerFeeRecipient:
- *                 type: string
- *     responses:
- *       200:
- *         description: The opened trade transaction
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- */
 app.post('/api/sdk/v0.1/trades/open', async (req, res) => {
   const { offerId, jupInstruction, marginSOL, leverage, partnerFeeRecipient } = req.body;
   try {
-    const offer = (await getOffers(lavarageProgram)).find(o => offerId === o.publicKey.toBase58())
+    const offers = await getOffers(lavarageProgram);
+    const offer = offers.find(o => offerId === o.publicKey.toBase58());
 
     if (!offer) {
-        throw new Error('No offer found with pubkey ' + offerId)
+      throw new Error('No offer found with pubkey ' + offerId);
     }
 
     const randomSeed = Keypair.generate();
@@ -245,49 +334,21 @@ app.post('/api/sdk/v0.1/trades/open', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/sdk/v0.1/trades/close:
- *   post:
- *     summary: Close a trade
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               positionId:
- *                 type: string
- *               offerId:
- *                 type: string
- *               jupInstruction:
- *                 type: object
- *               partnerFeeRecipient:
- *                 type: string
- *               profitFeeMarkup:
- *                 type: number
- *     responses:
- *       200:
- *         description: The closed trade transaction
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- */
 app.post('/api/sdk/v0.1/trades/close', async (req, res) => {
   const { positionId, offerId, jupInstruction, partnerFeeRecipient, profitFeeMarkup } = req.body;
   try {
-    const position = (await getAllPositions(lavarageProgram)).find(p => positionId === p.publicKey.toBase58())
+    const positions = await getAllPositions(lavarageProgram);
+    const position = positions.find(p => positionId === p.publicKey.toBase58());
 
     if (!position) {
-        throw new Error('No position found with pubkey ' + positionId)
+      throw new Error('No position found with pubkey ' + positionId);
     }
 
-    const offer = (await getOffers(lavarageProgram)).find(o => offerId === o.publicKey.toBase58())
+    const offers = await getOffers(lavarageProgram);
+    const offer = offers.find(o => offerId === o.publicKey.toBase58());
 
     if (!offer) {
-        throw new Error('No offer found with pubkey ' + offerId)
+      throw new Error('No offer found with pubkey ' + offerId);
     }
 
     const tx = await closeTrade(

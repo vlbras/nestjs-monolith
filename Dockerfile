@@ -8,9 +8,7 @@ RUN npm install
 
 COPY . .
 
-# Build TypeScript code and copy Swagger UI files
 RUN npm run build
-RUN npm run postbuild
 
 FROM node:18-alpine
 
