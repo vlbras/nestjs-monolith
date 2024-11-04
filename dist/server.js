@@ -204,45 +204,6 @@ app.get('/api/sdk/v0.1/positions', (req, res) => __awaiter(void 0, void 0, void 
  *             schema:
  *               type: object
  */
-app.get('/api/sdk/v0.2/positions', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const positions = yield (0, lavarage_sdk_1.getAllPositions)(lavarageProgram);
-        res.json(positions);
-    }
-    catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}));
-/**
- * @swagger
- * /api/sdk/v0.2/trades/open:
- *   post:
- *     summary: Open a trade
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               offerId:
- *                 type: string
- *               jupInstruction:
- *                 type: object
- *               marginSOL:
- *                 type: string
- *               leverage:
- *                 type: number
- *               partnerFeeRecipient:
- *                 type: string
- *     responses:
- *       200:
- *         description: The opened trade transaction
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- */
 app.post('/api/sdk/v0.1/trades/open', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { offerId, jupInstruction, marginSOL, leverage, partnerFeeRecipient } = req.body;
     try {
