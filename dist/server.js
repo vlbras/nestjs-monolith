@@ -34,6 +34,7 @@ function initProgram() {
     return new anchor_1.Program(lavarage_sdk_1.IDL, 'CRSeeBqjDnm3UPefJ9gxrtngTsnQRhEJiTA345Q83X3v', provider);
 }
 const lavarageProgram = initProgram();
+
 const swaggerDefinition = {
     openapi: '3.0.0',
     info: {
@@ -165,6 +166,45 @@ app.get('/api/sdk/v0.1/positions/liquidated', (req, res) => __awaiter(void 0, vo
  *                 type: object
  */
 app.get('/api/sdk/v0.1/positions', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const positions = yield (0, lavarage_sdk_1.getAllPositions)(lavarageProgram);
+        res.json(positions);
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}));
+/**
+ * @swagger
+ * /api/sdk/v0.1/trades/open:
+ *   post:
+ *     summary: Open a trade
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               offerId:
+ *                 type: string
+ *               jupInstruction:
+ *                 type: object
+ *               marginSOL:
+ *                 type: string
+ *               leverage:
+ *                 type: number
+ *               partnerFeeRecipient:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The opened trade transaction
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+app.get('/api/sdk/v0.2/positions', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const positions = yield (0, lavarage_sdk_1.getAllPositions)(lavarageProgram);
         res.json(positions);
