@@ -215,7 +215,7 @@ app.get('/api/sdk/v0.2/positions', (req, res) => __awaiter(void 0, void 0, void 
 }));
 /**
  * @swagger
- * /api/sdk/v0.1/trades/open:
+ * /api/sdk/v0.2/trades/open:
  *   post:
  *     summary: Open a trade
  *     requestBody:
