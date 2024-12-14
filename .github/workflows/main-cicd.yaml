@@ -30,11 +30,11 @@ jobs:
     - name: Copy Docker image to GCE
       run: |
         scp -i gce_key -o StrictHostKeyChecking=no app-image-${{ env.IMAGE_TAG }}.tar \
-        ${secrets.GCE_USER}@${{ secrets.GCE_HOST }}:~/app-image-${{ env.IMAGE_TAG }}.tar
+        ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }}:~/app-image-${{ env.IMAGE_TAG }}.tar
 
     - name: Deploy Docker image on GCE
       run: |
         ssh -i gce_key -o StrictHostKeyChecking=no \
-        ${secrets.GCE_USER}@${{ secrets.GCE_HOST }} << EOF
+        ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }} << EOF
           docker load -i app-image-${{ env.IMAGE_TAG }}.tar
         EOF
