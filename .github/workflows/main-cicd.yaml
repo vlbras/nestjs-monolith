@@ -1,0 +1,42 @@
+name: CI/CD for GCE Docker App
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      run: |
+        echo "${{ secrets.GCE_SSH_KEY }}" > gce_key
+        chmod 600 gce_key
+
+    - name: Define version tag
+      run: echo "IMAGE_TAG=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+    - name: Build Docker image
+      run: docker build -t app-image:${{ env.IMAGE_TAG }} .
+
+    - name: Save Docker image to a tar file
+      run: docker save app-image:${{ env.IMAGE_TAG }} -o app-image-${{ env.IMAGE_TAG }}.tar
+
+    - name: Copy Docker image to GCE
+      run: |
+        scp -i gce_key -o StrictHostKeyChecking=no app-image-${{ env.IMAGE_TAG }}.tar \
+        ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }}:~/app-image-${{ env.IMAGE_TAG }}.tar
+
+    - name: Deploy Docker image on GCE
+      run: |
+        ssh -i gce_key -o StrictHostKeyChecking=no \
+        ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }} << EOF
+          docker load -i app-image-${{ env.IMAGE_TAG }}.tar
+        EOF
