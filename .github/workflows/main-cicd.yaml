@@ -39,4 +39,5 @@ jobs:
         ssh -i gce_key -o StrictHostKeyChecking=no \
         ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }} << EOF
           docker load -i app-image-${{ env.IMAGE_TAG }}.tar
+          rm app-image-${{ env.IMAGE_TAG }}.tar
         EOF
