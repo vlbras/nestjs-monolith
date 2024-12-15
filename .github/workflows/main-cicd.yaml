@@ -40,4 +40,7 @@ jobs:
         ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }} << EOF
           docker load -i app-image-${{ env.IMAGE_TAG }}.tar
           rm app-image-${{ env.IMAGE_TAG }}.tar
+          docker stop app-container || true
+          docker rm app-container || true
+          docker run -d --name app-container -p 9999:3000 app-image:${{ env.IMAGE_TAG }}
         EOF
